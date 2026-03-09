@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="MVVMLoginApp.Views.CinemaMainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <Grid Background="#0A0A1A">
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <TextBlock Text="Mawlers"
+                    FontSize="52"
+                    FontFamily="Impact"
+                    FontWeight="Bold"
+                    Foreground="#00AAFF"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,-5"/>
+                <TextBlock Text="Cinema Complex"
+                    FontSize="20"
+                    FontWeight="Normal"
+                    Foreground="#00FFFF"
+                    FontFamily="Trebuchet MS"
+                    HorizontalAlignment="Center"/>
+            </StackPanel>
+            <UniformGrid Columns="2">
+                <Button Content="View All Movies" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding ViewAllMoviesCommand}"/>
+                <Button Content="View All Showings" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding ViewAllShowingsCommand}"/>
+                <Button Content="Schedule a Showing" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding ScheduleaShowingCommand}"/>
+                <Button Content="Make a Reservation" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding MakeaReservationCommand}"/>
+                <Button Content="View Available Seats" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding ViewAvailableSeatsCommand}"/>
+                <Button Content="View All Reservations" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding ViewAllReservationsCommand}"/>
+                <Button Content="View First and Last Showing" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding ViewFirstandLastShowingCommand}"/>
+                <Button Content="View Cinema Rooms" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding ViewCinemaRoomsCommand}"/>
+                <Button Content="Add a Movie" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding AddaMovieCommand}"/>
+                <Button Content="Save and Exit" Margin="10" Background="#0F0F2A" Foreground="#FFFFFF"
+                    FontFamily="Trebuchet MS" FontSize="14" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2" Padding="10,15,10,15"
+                    Command="{Binding SaveandExitCommand}"/>
+            </UniformGrid>
+        </DockPanel>
+        <Button Content="Logout"
+            Width="80" Height="30"
+            HorizontalAlignment="Right" VerticalAlignment="Top"
+            Margin="0,10,10,0"
+            Background="#0F0F2A" Foreground="#00FFFF"
+            FontFamily="Trebuchet MS" FontSize="12" FontWeight="Bold"
+            BorderBrush="#00FFFF" BorderThickness="2"
+            Command="{Binding LogoutCommand}" Click="Button_Click"/>
+    </Grid>
+</UserControl>
