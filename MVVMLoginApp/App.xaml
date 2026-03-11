@@ -14,6 +14,36 @@
         <DataTemplate DataType="{x:Type vm:CinemaMainViewModel}">
             <views:CinemaMainView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ViewAllMoviesViewModel}">
+            <views:ViewAllMoviesView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ViewAllShowingsViewModel}">
+            <views:ViewAllShowingsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ScheduleaShowingViewModel}">
+            <views:ScheduleaShowingView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:MakeaReservationViewModel}">
+            <views:MakeaReservationView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ViewAvailableSeatsViewModel}">
+            <views:ViewAvailableSeatsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ViewAllReservationsViewModel}">
+            <views:ViewAllReservationsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ViewFirstandLastShowingViewModel}">
+            <views:ViewFirstandLastShowingView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ViewCinemaRoomsViewModel}">
+            <views:ViewCinemaRoomsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AddaMovieViewModel}">
+            <views:AddaMovieView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SaveandExitViewModel}">
+            <views:SaveandExitView/>
+        </DataTemplate>
     </Application.Resources>
 </Application>
     
