@@ -5,7 +5,7 @@
     xmlns:converters="clr-namespace:MVVMLoginApp.Converters"
     xmlns:views="clr-namespace:MVVMLoginApp.Views"
     xmlns:vm="clr-namespace:MVVMLoginApp.ViewModels"
-    StartupUri="MainWindow.xaml">
+    StartupUri="Views/temp.xaml">
     <Application.Resources>
         <converters:StringToVisibilityConverter x:Key="StringToVisibility"/>
         <DataTemplate DataType="{x:Type vm:LoginViewModel}">
