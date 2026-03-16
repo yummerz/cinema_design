@@ -8,6 +8,7 @@
     StartupUri="Views/temp.xaml">
     <Application.Resources>
         <converters:StringToVisibilityConverter x:Key="StringToVisibility"/>
+        <converters:BoolToStatusConverter x:Key="BoolToStatus"/>
         <DataTemplate DataType="{x:Type vm:LoginViewModel}">
             <views:LoginView/>
         </DataTemplate>

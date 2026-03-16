@@ -27,13 +27,15 @@
             FontWeight="Bold"
             Margin="10,5,0,5"/>
                 <ListView BorderBrush="Gray" BorderThickness="1"
-                          ItemsSource="{Binding LostItems}">
+                    ItemsSource="{Binding LostItems}"
+                    SelectedItem="{Binding SelectedItem}">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Name" Width="80" DisplayMemberBinding="{Binding Name}"/>
                             <GridViewColumn Header="Description" Width="150" DisplayMemberBinding="{Binding Description}"/>
                             <GridViewColumn Header="Location Lost" Width="100" DisplayMemberBinding="{Binding LocationLost}"/>
                             <GridViewColumn Header="Date Reported" Width="100" DisplayMemberBinding="{Binding DateReported}"/>
+                            <GridViewColumn Header="Status" Width="100" DisplayMemberBinding="{Binding Status, Converter={StaticResource BoolToStatus}}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -46,16 +48,20 @@
          Margin="5">
 
             <StackPanel>
-                <TextBlock Text="Report New lost Item" FontSize="20" FontWeight="Bold" Margin="10,5,0,0"></TextBlock>
-                <TextBlock Text="Name:" FontSize="15" Margin="5,10,0,0" ></TextBlock>
-                <TextBox Margin="5,0,10,0" TextChanged="TextBox_TextChanged" ></TextBox>
-                <TextBlock Text="Description:" FontSize="15" Margin="5,20,0,0"></TextBlock>
-                <TextBox Margin="5,0,10,0" ></TextBox>
-                <TextBlock Text="Location Lost:" FontSize="15" Margin="5,20,0,0"></TextBlock>
-                <TextBox Margin="5,0,10,0" ></TextBox>
+                <TextBlock Text="Report New lost Item" FontSize="20" FontWeight="Bold" Margin="10,5,0,0"/>
+                <TextBlock Text="Name:" FontSize="15" Margin="5,10,0,0"/>
+                <TextBox Margin="5,0,10,0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Description:" FontSize="15" Margin="5,20,0,0"/>
+                <TextBox Margin="5,0,10,0" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Location Lost:" FontSize="15" Margin="5,20,0,0"/>
+                <TextBox Margin="5,0,10,0" Text="{Binding LocationLost, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Date Reported:" FontSize="15" Margin="5,20,0,0"/>
+                <DatePicker Margin="5,0,10,0" SelectedDate="{Binding DateReported}"/>
+                <CheckBox Content="Status" Margin="5,10,0,0" IsChecked="{Binding Status}"/>
                 <StackPanel Orientation="Horizontal" Margin="5,10,0,0">
-                    <Button Content="Save" Width="70" Margin="0,0,5,0"/>
-                    <Button Content="Delete" Width="70"/>
+                    <Button Content="Save" Width="70" Margin="0,0,5,0" Command="{Binding SaveCommand}"/>
+                    <Button Content="Delete" Width="70" Margin="0,0,5,0" Command="{Binding DeleteCommand}"/>
+                    <Button Content="Clear" Width="70" Command="{Binding ClearCommand}"/>
                 </StackPanel>
             </StackPanel>
         </Border>

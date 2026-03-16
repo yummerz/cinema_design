@@ -12,5 +12,6 @@ namespace MVVMLoginApp.Models
         public string Description { get; set; } = string.Empty;
         public string LocationLost { get; set; } = string.Empty;
         public string DateReported { get; set; } = string.Empty;
+        public bool Status { get; set; }
     }
 }
