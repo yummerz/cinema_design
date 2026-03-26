@@ -5,7 +5,7 @@
     xmlns:converters="clr-namespace:MVVMLoginApp.Converters"
     xmlns:views="clr-namespace:MVVMLoginApp.Views"
     xmlns:vm="clr-namespace:MVVMLoginApp.ViewModels"
-    StartupUri="Views/temp.xaml">
+    StartupUri="MainWindow.xaml">
     <Application.Resources>
         <converters:StringToVisibilityConverter x:Key="StringToVisibility"/>
         <converters:BoolToStatusConverter x:Key="BoolToStatus"/>

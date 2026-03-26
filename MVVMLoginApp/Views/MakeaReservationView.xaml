@@ -1,42 +1,100 @@
 ﻿<UserControl x:Class="MVVMLoginApp.Views.MakeaReservationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d">
-    <Grid Background="#0A0A1A">
-        <DockPanel>
-            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Top">
-                <TextBlock Text="Mawlers"
-                       FontSize="52"
-                       FontFamily="Impact"
-                       FontWeight="Bold"
-                       Foreground="#00AAFF"
-                       HorizontalAlignment="Center"
-                       Margin="0,10,0,-5"/>
-                <TextBlock Text="Cinema Complex"
-                       FontSize="20"
-                       FontWeight="Normal"
-                       Foreground="#00FFFF"
-                       FontFamily="Trebuchet MS"
-                       HorizontalAlignment="Center"/>
-            </StackPanel>
-        </DockPanel>
-        <Button Content="Back to Main Menu"
-            Width="150" Height="30"
-            HorizontalAlignment="Left" VerticalAlignment="Top"
-            Margin="10,10,0,0"
-            Background="#0F0F2A" Foreground="#00FFFF"
-            FontFamily="Trebuchet MS" FontSize="12" FontWeight="Bold"
-            BorderBrush="#00FFFF" BorderThickness="2"
-            Command="{Binding BackToMainMenuCommand}"/>
-        <Button Content="Logout"
-            Width="80" Height="30"
-            HorizontalAlignment="Right" VerticalAlignment="Top"
-            Margin="0,10,10,0"
-            Background="#0F0F2A" Foreground="#00FFFF"
-            FontFamily="Trebuchet MS" FontSize="12" FontWeight="Bold"
-            BorderBrush="#00FFFF" BorderThickness="2"
-            Command="{Binding LogoutCommand}"/>
-    </Grid>
+	<Grid Background="#0A0A1A">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<!-- Header -->
+		<Grid Grid.Row="0" Margin="10,10,10,0">
+			<Button Content="Back to Main Menu"
+                    Width="150" Height="30" HorizontalAlignment="Left"
+                    Background="#0F0F2A" Foreground="#00FFFF"
+                    FontFamily="Trebuchet MS" FontSize="12" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2"
+                    Command="{Binding BackToMainMenuCommand}"/>
+			<StackPanel HorizontalAlignment="Center">
+				<TextBlock Text="Mawlers" FontSize="40" FontFamily="Impact"
+                           FontWeight="Bold" Foreground="#00AAFF" HorizontalAlignment="Center"/>
+				<TextBlock Text="Cinema Complex" FontSize="16" Foreground="#00FFFF"
+                           FontFamily="Trebuchet MS" HorizontalAlignment="Center"/>
+			</StackPanel>
+			<Button Content="Logout"
+                    Width="80" Height="30" HorizontalAlignment="Right"
+                    Background="#0F0F2A" Foreground="#00FFFF"
+                    FontFamily="Trebuchet MS" FontSize="12" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="2"
+                    Command="{Binding LogoutCommand}"/>
+		</Grid>
+
+		<!-- Body -->
+		<Grid Grid.Row="1" Margin="10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="2*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+
+			<!-- Reservations List -->
+			<Border Grid.Column="0" BorderBrush="#00FFFF" BorderThickness="2" Margin="0,0,5,0" CornerRadius="4">
+				<DockPanel Margin="8">
+					<TextBlock DockPanel.Dock="Top" Text="Current Reservations"
+                               FontSize="18" FontWeight="Bold"
+                               Foreground="#00FFFF" Margin="0,0,0,8"/>
+					<ListView ItemsSource="{Binding Reservations}"
+                              Background="Transparent" Foreground="White"
+                              BorderThickness="0">
+						<ListView.View>
+							<GridView>
+								<GridViewColumn Header="Client Name" Width="200" DisplayMemberBinding="{Binding ClientName}"/>
+								<GridViewColumn Header="Movie" Width="220" DisplayMemberBinding="{Binding MovieTitle}"/>
+							</GridView>
+						</ListView.View>
+					</ListView>
+				</DockPanel>
+			</Border>
+
+			<!-- Reservation Form -->
+			<Border Grid.Column="1" BorderBrush="#00FFFF" BorderThickness="2" Margin="5,0,0,0" CornerRadius="4">
+				<StackPanel Margin="12">
+					<TextBlock Text="New Reservation" FontSize="18" FontWeight="Bold"
+                               Foreground="#00FFFF" Margin="0,0,0,12"/>
+
+					<TextBlock Text="Client Name:" Foreground="#AAAAAA" FontSize="13"/>
+					<TextBox Margin="0,4,0,14" Padding="6,4"
+                             Background="#0F0F2A" Foreground="White" BorderBrush="#00FFFF"
+                             Text="{Binding ClientName, UpdateSourceTrigger=PropertyChanged}"/>
+
+					<TextBlock Text="Select Movie:" Foreground="#000000" FontSize="13"/>
+					<ComboBox Margin="0,4,0,20" Padding="6,4"
+							  Background="#000000" Foreground="#000000" BorderBrush="#00FFFF"
+							  ItemsSource="{Binding Movies}"
+							  SelectedItem="{Binding SelectedMovie}"
+							  DisplayMemberPath="Title">
+						<ComboBox.Resources>
+							<Style TargetType="ComboBoxItem">
+								<Setter Property="Background" Value="#000000"/>
+								<Setter Property="Foreground" Value="#00FFFF"/>
+							</Style>
+						</ComboBox.Resources>
+					</ComboBox>
+
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+						<Button Content="Confirm" Width="90" Margin="0,0,8,0" Padding="0,6"
+                                Background="#0F0F2A" Foreground="#00FFFF"
+                                BorderBrush="#00FFFF" BorderThickness="2"
+                                FontWeight="Bold" Command="{Binding ConfirmCommand}"/>
+						<Button Content="Clear" Width="70" Padding="0,6"
+                                Background="#0F0F2A" Foreground="#00FFFF"
+                                BorderBrush="#00FFFF" BorderThickness="2"
+                                FontWeight="Bold" Command="{Binding ClearCommand}"/>
+					</StackPanel>
+				</StackPanel>
+			</Border>
+		</Grid>
+	</Grid>
 </UserControl>

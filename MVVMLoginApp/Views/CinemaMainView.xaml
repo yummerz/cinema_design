@@ -71,6 +71,6 @@
             Background="#0F0F2A" Foreground="#00FFFF"
             FontFamily="Trebuchet MS" FontSize="12" FontWeight="Bold"
             BorderBrush="#00FFFF" BorderThickness="2"
-            Command="{Binding LogoutCommand}" Click="Button_Click"/>
+            Command="{Binding LogoutCommand}"/>
     </Grid>
 </UserControl>
