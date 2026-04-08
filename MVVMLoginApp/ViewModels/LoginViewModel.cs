@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using MVVMLoginApp.Commands;
 using MVVMLoginApp.Models;
 using System.Windows.Input;
+using Microsoft.Data.SqlClient;
+using System.Windows;
 
 namespace MVVMLoginApp.ViewModels
 {
@@ -67,21 +69,75 @@ namespace MVVMLoginApp.ViewModels
         // ExecuteLogin: What happens when the button is clicked
         private void ExecuteLogin()
         {
-            IsLoading = true;
-            ErrorMessage = string.Empty;
+            //IsLoading = true;
+            //ErrorMessage = string.Empty;
 
-            var user = _authService.Authenticate(Username, Password);
+            //var user = _authService.Authenticate(Username, Password);
 
-            if (user is not null)
+            //if (user is not null)
+            //{
+            //    _onLoginSuccess(user);
+            //}
+            //else
+            //{
+            //    ErrorMessage = "Invalid username or password. Please try again.";
+            //}
+
+            //IsLoading = false;
+
+            string connectionString = @"Server=CCL2-11\MSSQLSERVER01; Database=Mawlers Cinema;
+                                    User Id=sa;Password=ccl2;
+                                    TrustServerCertificate=True;";
+
+            bool isLoginValid = false;
+
+            try
             {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT * FROM Users WHERE Username = " +
+                        "'" + Username.Trim() + "' " +
+                        "AND Password = '" + Password.Trim() + "' ";
+
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        connection.Open();
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                
+                                isLoginValid = true;
+                            }
+                        }
+                    }
+
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Database connection failed: " + ex.Message);
+                return;  
+            }
+
+            if (isLoginValid)
+            {
+                var user = _authService.Authenticate(Username, Password);
                 _onLoginSuccess(user);
             }
             else
             {
-                ErrorMessage = "Invalid username or password. Please try again.";
+                MessageBox.Show("Invalid Username or Password.", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            IsLoading = false;
         }
+
+        
+
+        
     }
 }
