@@ -1,7 +1,10 @@
-﻿using MVVMLoginApp.Commands;
+﻿using Microsoft.Data.SqlClient;
+using MVVMLoginApp.Commands;
 using MVVMLoginApp.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace MVVMLoginApp.ViewModels
@@ -10,6 +13,11 @@ namespace MVVMLoginApp.ViewModels
     {
         private readonly Action _onBackToMain;
         private readonly Action _onLogout;
+
+        private static readonly string connectionString =
+            @"Server=CCL2-11\MSSQLSERVER01; Database=Mawlers Cinema;
+              User Id=sa; Password=ccl2;
+              TrustServerCertificate=True;";
 
         public ObservableCollection<Movie> Movies => MovieStore.Movies;
 
@@ -69,42 +77,130 @@ namespace MVVMLoginApp.ViewModels
             _onBackToMain = onBackToMain;
             _onLogout = onLogout;
 
-            SaveCommand = new RelayCommand(ExecuteSave);
-            DeleteCommand = new RelayCommand(ExecuteDelete);
-            ClearCommand = new RelayCommand(ExecuteClear);
-            BackToMainMenuCommand = new RelayCommand(_onBackToMain);
-            LogoutCommand = new RelayCommand(_onLogout);
+            SaveCommand = new AsyncRelayCommand(ExecuteSave);
+            DeleteCommand = new AsyncRelayCommand(ExecuteDelete);
+            ClearCommand = new AsyncRelayCommand(ExecuteClear);
+            BackToMainMenuCommand = new AsyncRelayCommand(() => Task.Run(_onBackToMain));
+            LogoutCommand = new AsyncRelayCommand(() => Task.Run(_onLogout));
         }
 
-        private void ExecuteSave()
+        // CREATE or UPDATE depending on whether a movie is selected
+        public async Task ExecuteSave()
         {
             if (string.IsNullOrWhiteSpace(Title)) return;
-            MovieStore.Movies.Add(new Movie
-            {
-                Title = Title,
-                Genre = Genre,
-                Duration = Duration,
-                Rating = Rating
-            });
-            ExecuteClear();
-        }
 
-        private void ExecuteDelete()
-        {
+            // ── UPDATE path ──
             if (SelectedMovie != null)
             {
-                MovieStore.Movies.Remove(SelectedMovie);
-                ExecuteClear();
+                var movieToUpdate = SelectedMovie;
+
+                // These property changes now automatically reflect in the UI
+                movieToUpdate.Title = Title;
+                movieToUpdate.Genre = Genre;
+                movieToUpdate.Duration = Duration;
+                movieToUpdate.Rating = Rating;
+
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        string query = "UPDATE Movies SET Title = @title, Genre = @genre, " +
+                                       "Duration = @duration, Rating = @rating " +
+                                       "WHERE MovieId = @id";
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            await connection.OpenAsync();
+                            command.Parameters.AddWithValue("@title", movieToUpdate.Title);
+                            command.Parameters.AddWithValue("@genre", movieToUpdate.Genre);
+                            command.Parameters.AddWithValue("@duration", movieToUpdate.Duration);
+                            command.Parameters.AddWithValue("@rating", movieToUpdate.Rating);
+                            command.Parameters.AddWithValue("@id", movieToUpdate.MovieId);
+                            await command.ExecuteNonQueryAsync();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to update movie: " + ex.Message);
+                }
             }
+            // ── CREATE path ──
+            else
+            {
+                var newMovie = new Movie
+                {
+                    Title = Title,
+                    Genre = Genre,
+                    Duration = Duration,
+                    Rating = Rating
+                };
+
+                MovieStore.Movies.Add(newMovie);
+
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        string query = "INSERT INTO Movies (Title, Genre, Duration, Rating) " +
+                                       "VALUES (@title, @genre, @duration, @rating)";
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            await connection.OpenAsync();
+                            command.Parameters.AddWithValue("@title", newMovie.Title);
+                            command.Parameters.AddWithValue("@genre", newMovie.Genre);
+                            command.Parameters.AddWithValue("@duration", newMovie.Duration);
+                            command.Parameters.AddWithValue("@rating", newMovie.Rating);
+                            await command.ExecuteNonQueryAsync();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to save movie: " + ex.Message);
+                }
+            }
+
+            await ExecuteClear();
         }
 
-        private void ExecuteClear()
+        // DELETE
+        public async Task ExecuteDelete()
+        {
+            if (SelectedMovie == null) return;
+
+            var movieToDelete = SelectedMovie;
+            MovieStore.Movies.Remove(movieToDelete);
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM Movies WHERE MovieId = @id";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        await connection.OpenAsync();
+                        command.Parameters.AddWithValue("@id", movieToDelete.MovieId);
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to delete movie: " + ex.Message);
+            }
+
+            await ExecuteClear();
+        }
+
+        // CLEAR
+        public async Task ExecuteClear()
         {
             Title = string.Empty;
             Genre = string.Empty;
             Duration = string.Empty;
             Rating = string.Empty;
             SelectedMovie = null;
+            await Task.CompletedTask;
         }
     }
 }

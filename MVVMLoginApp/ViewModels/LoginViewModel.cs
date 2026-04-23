@@ -86,44 +86,34 @@ namespace MVVMLoginApp.ViewModels
             //IsLoading = false;
 
             string connectionString = @"Server=CCL2-11\MSSQLSERVER01; Database=Mawlers Cinema;
-                                    User Id=sa;Password=ccl2;
-                                    TrustServerCertificate=True;";
-
+                        User Id=sa;Password=ccl2;
+                        TrustServerCertificate=True;";
             bool isLoginValid = false;
-
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString)) // ✅ create connection object
                 {
-                    string query = "SELECT * FROM Users WHERE Username = " +
-                        "'" + Username.Trim() + "' " +
-                        "AND Password = '" + Password.Trim() + "' ";
-
-
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    string query = "SELECT * FROM Users WHERE Username = @username AND Password = @password";
+                    using (SqlCommand command = new SqlCommand(query, connection)) // ✅ pass connection object
                     {
-                        connection.Open();
-
+                        command.Parameters.AddWithValue("@username", Username.Trim());
+                        command.Parameters.AddWithValue("@password", Password.Trim());
+                        connection.Open(); // ✅ open the connection object
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
                             {
-                                
                                 isLoginValid = true;
                             }
                         }
                     }
-
-
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Database connection failed: " + ex.Message);
-                return;  
+                return;
             }
-
             if (isLoginValid)
             {
                 var user = _authService.Authenticate(Username, Password);
@@ -134,10 +124,60 @@ namespace MVVMLoginApp.ViewModels
                 MessageBox.Show("Invalid Username or Password.", "Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
+        } // ← closes ExecuteLogin()
 
-        
+    } // ← closes LoginViewModel class
 
-        
-    }
-}
+    //public async Task ExecuteSaveCommand(object par)
+    //{
+    //    //append new item to your list through Add Method
+    //    LostItemsList.Add(new LostItems
+    //    {
+    //        ItemName = newLostItems.ItemName,
+    //        Description = newLostItems.Description,
+    //        DateReported = newLostItems.DateReported,
+    //        Location = newLostItems.Location,
+    //        IsFound = newLostItems.IsFound
+    //    });
+
+    //    //behind the scene
+    //    string connectionString = @"Server=CCL2-11\MSSQLSERVER01; Database=Mawlers Cinema;
+    //                    User Id=sa;Password=ccl2;
+    //                    TrustServerCertificate=True;";
+    //    try
+    //    {
+    //        using (SqlConnection connection = new SqlConnection(connectionString)) // ✅ create connection object
+    //        {
+    //            string query = "INSERT INTO LostItemTable (ItemName, Description, Location, DateReported, IsFound) VALUES (@item,@desc,@loc,@datereported,@isFound)";
+    //            using (SqlCommand command = new SqlCommand(query, connection)) // ✅ pass connection object
+    //            {
+    //                await connection.OpenAsync();
+    //                command.Parameters.AddWithValue("@item", newLostItems.ItemName);
+    //                command.Parameters.AddWithValue("@desc", newLostItems.Description);
+    //                command.Parameters.AddWithValue("@loc", newLostItems.Location);
+    //                command.Parameters.AddWithValue("@datereported", DateTime.Now);
+    //                command.Parameters.AddWithValue("@isFound", newLostItems.IsFound);
+
+    //                await command.ExecuteNonQueryAsync();
+
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        MessageBox.Show("Database connection failed: " + ex.Message);
+    //        return;
+    //    }
+
+    //    newLostItems.ItemName = String.Empty;
+    //    newLostItems.Description = String.Empty;
+    //    newLostItems.Location = string.Empty;
+    //    newLostItems.DateReported = DateTime.Now;
+    //    newLostItems.IsFound = false;
+
+    //}
+
+} // ← closes namespace
+
+
+
