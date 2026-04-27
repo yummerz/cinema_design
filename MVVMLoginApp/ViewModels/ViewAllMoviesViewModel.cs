@@ -84,17 +84,16 @@ namespace MVVMLoginApp.ViewModels
             LogoutCommand = new AsyncRelayCommand(() => Task.Run(_onLogout));
         }
 
-        // CREATE or UPDATE depending on whether a movie is selected
+        // CREATE or UPDATE
         public async Task ExecuteSave()
         {
             if (string.IsNullOrWhiteSpace(Title)) return;
 
-            // ── UPDATE path ──
+            // ── UPDATE path — a movie was selected from the list ──
             if (SelectedMovie != null)
             {
                 var movieToUpdate = SelectedMovie;
 
-                // These property changes now automatically reflect in the UI
                 movieToUpdate.Title = Title;
                 movieToUpdate.Genre = Genre;
                 movieToUpdate.Duration = Duration;
@@ -124,7 +123,7 @@ namespace MVVMLoginApp.ViewModels
                     MessageBox.Show("Failed to update movie: " + ex.Message);
                 }
             }
-            // ── CREATE path ──
+            // ── CREATE path — nothing selected, brand new movie ──
             else
             {
                 var newMovie = new Movie
@@ -135,14 +134,15 @@ namespace MVVMLoginApp.ViewModels
                     Rating = Rating
                 };
 
-                MovieStore.Movies.Add(newMovie);
-
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
+                        // OUTPUT INSERTED.MovieId returns the new ID that SQL generated
                         string query = "INSERT INTO Movies (Title, Genre, Duration, Rating) " +
+                                       "OUTPUT INSERTED.MovieId " +
                                        "VALUES (@title, @genre, @duration, @rating)";
+
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
                             await connection.OpenAsync();
@@ -150,9 +150,15 @@ namespace MVVMLoginApp.ViewModels
                             command.Parameters.AddWithValue("@genre", newMovie.Genre);
                             command.Parameters.AddWithValue("@duration", newMovie.Duration);
                             command.Parameters.AddWithValue("@rating", newMovie.Rating);
-                            await command.ExecuteNonQueryAsync();
+
+                            // Read back the real MovieId that the database generated
+                            var result = await command.ExecuteScalarAsync();
+                            newMovie.MovieId = Convert.ToInt32(result);
                         }
                     }
+
+                    // Add to UI list AFTER we have the real MovieId
+                    MovieStore.Movies.Add(newMovie);
                 }
                 catch (Exception ex)
                 {
