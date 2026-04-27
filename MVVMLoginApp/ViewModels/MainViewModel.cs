@@ -1,4 +1,5 @@
 ﻿using MVVMLoginApp.Models;
+
 namespace MVVMLoginApp.ViewModels
 {
     public class MainViewModel : BaseViewModel
@@ -40,15 +41,10 @@ namespace MVVMLoginApp.ViewModels
             CurrentView = page switch
             {
                 "ViewAllMovies" => new ViewAllMoviesViewModel(NavigateToCinemaMain, NavigateToLogin),
-                "ViewAllShowings" => new ViewAllShowingsViewModel(NavigateToCinemaMain, NavigateToLogin),
-                "ScheduleaShowing" => new ScheduleaShowingViewModel(NavigateToCinemaMain, NavigateToLogin),
                 "MakeaReservation" => new MakeaReservationViewModel(NavigateToCinemaMain, NavigateToLogin),
-                "ViewAvailableSeats" => new ViewAvailableSeatsViewModel(NavigateToCinemaMain, NavigateToLogin),
-                "ViewAllReservations" => new ViewAllReservationsViewModel(NavigateToCinemaMain, NavigateToLogin),
-                "ViewFirstandLastShowing" => new ViewFirstandLastShowingViewModel(NavigateToCinemaMain, NavigateToLogin),
+                "ScheduleaShowing" => new ScheduleaShowingViewModel(NavigateToCinemaMain, NavigateToLogin),
                 "ViewCinemaRooms" => new ViewCinemaRoomsViewModel(NavigateToCinemaMain, NavigateToLogin),
-                "AddaMovie" => new AddaMovieViewModel(NavigateToCinemaMain, NavigateToLogin),
-                "SaveandExit" => new SaveandExitViewModel(NavigateToCinemaMain, NavigateToLogin),
+
                 _ => CurrentView
             };
         }

@@ -14,10 +14,7 @@ namespace MVVMLoginApp.ViewModels
         private readonly Action _onBackToMain;
         private readonly Action _onLogout;
 
-        private static readonly string connectionString =
-            @"Server=CCL2-11\MSSQLSERVER01; Database=Mawlers Cinema;
-              User Id=sa; Password=ccl2;
-              TrustServerCertificate=True;";
+        private static readonly string connectionString = DatabaseConfig.ConnectionString;
 
         public ObservableCollection<Movie> Movies => MovieStore.Movies;
 
@@ -170,10 +167,41 @@ namespace MVVMLoginApp.ViewModels
         }
 
         // DELETE
+        // DELETE
         public async Task ExecuteDelete()
         {
             if (SelectedMovie == null) return;
 
+            // Check if movie is used in any showings first
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    string checkQuery = "SELECT COUNT(*) FROM Showings WHERE MovieId = @id";
+                    using (SqlCommand command = new SqlCommand(checkQuery, connection))
+                    {
+                        await connection.OpenAsync();
+                        command.Parameters.AddWithValue("@id", SelectedMovie.MovieId);
+                        int count = (int)await command.ExecuteScalarAsync();
+
+                        if (count > 0)
+                        {
+                            MessageBox.Show(
+                                $"Cannot delete '{SelectedMovie.Title}' because it has {count} showing(s) scheduled. " +
+                                "Please delete those showings first.",
+                                "Cannot Delete", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error checking movie usage: " + ex.Message);
+                return;
+            }
+
+            // Safe to delete — no showings attached
             var movieToDelete = SelectedMovie;
             MovieStore.Movies.Remove(movieToDelete);
 

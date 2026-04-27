@@ -7,10 +7,7 @@ namespace MVVMLoginApp.Models
 {
     public static class MovieStore
     {
-        private static readonly string connectionString =
-            @"Server=CCL2-11\MSSQLSERVER01; Database=Mawlers Cinema;
-              User Id=sa; Password=ccl2;
-              TrustServerCertificate=True;";
+        private static readonly string connectionString = DatabaseConfig.ConnectionString;
 
         public static ObservableCollection<Movie> Movies { get; } = LoadMoviesFromDatabase();
 

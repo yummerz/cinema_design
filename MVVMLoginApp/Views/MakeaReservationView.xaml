@@ -40,7 +40,8 @@
             </Grid.ColumnDefinitions>
 
             <!-- Reservations List -->
-            <Border Grid.Column="0" BorderBrush="#00FFFF" BorderThickness="2" Margin="0,0,5,0" CornerRadius="4">
+            <Border Grid.Column="0" BorderBrush="#00FFFF" BorderThickness="2"
+                    Margin="0,0,5,0" CornerRadius="4">
                 <DockPanel Margin="8">
                     <TextBlock DockPanel.Dock="Top" Text="Current Reservations"
                                FontSize="18" FontWeight="Bold"
@@ -51,10 +52,18 @@
                               BorderThickness="0">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Client Name" Width="200"
+                                <GridViewColumn Header="Client Name" Width="110"
                                                 DisplayMemberBinding="{Binding ClientName}"/>
-                                <GridViewColumn Header="Movie" Width="220"
+                                <GridViewColumn Header="Movie" Width="120"
                                                 DisplayMemberBinding="{Binding MovieTitle}"/>
+                                <GridViewColumn Header="Room" Width="70"
+                                                DisplayMemberBinding="{Binding RoomName}"/>
+                                <GridViewColumn Header="Date" Width="90"
+                                                DisplayMemberBinding="{Binding ShowingDate, StringFormat=\{0:MM/dd/yyyy\}}"/>
+                                <GridViewColumn Header="Time" Width="55"
+                                                DisplayMemberBinding="{Binding ShowingTimeDisplay}"/>
+                                <GridViewColumn Header="Seat" Width="45"
+                                                DisplayMemberBinding="{Binding SeatNumber}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -62,10 +71,9 @@
             </Border>
 
             <!-- Reservation Form -->
-            <Border Grid.Column="1" BorderBrush="#00FFFF" BorderThickness="2" Margin="5,0,0,0" CornerRadius="4">
+            <Border Grid.Column="1" BorderBrush="#00FFFF" BorderThickness="2"
+                    Margin="5,0,0,0" CornerRadius="4">
                 <StackPanel Margin="12">
-
-                    <!-- Title changes dynamically based on whether editing or adding -->
                     <TextBlock Text="{Binding FormTitle}" FontSize="18" FontWeight="Bold"
                                Foreground="#00FFFF" Margin="0,0,0,12"/>
 
@@ -74,12 +82,12 @@
                              Background="#0F0F2A" Foreground="White" BorderBrush="#00FFFF"
                              Text="{Binding ClientName, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <TextBlock Text="Select Movie:" Foreground="#AAAAAA" FontSize="13"/>
-                    <ComboBox Margin="0,4,0,20" Padding="6,4"
+                    <TextBlock Text="Select Showing:" Foreground="#AAAAAA" FontSize="13"/>
+                    <ComboBox Margin="0,4,0,8" Padding="6,4"
                               Background="#000000" Foreground="#000000" BorderBrush="#00FFFF"
-                              ItemsSource="{Binding Movies}"
-                              SelectedItem="{Binding SelectedMovie}"
-                              DisplayMemberPath="Title">
+                              ItemsSource="{Binding Showings}"
+                              SelectedItem="{Binding SelectedShowing}"
+                              DisplayMemberPath="DisplayText">
                         <ComboBox.Resources>
                             <Style TargetType="ComboBoxItem">
                                 <Setter Property="Background" Value="#000000"/>
@@ -87,6 +95,12 @@
                             </Style>
                         </ComboBox.Resources>
                     </ComboBox>
+
+                    <!-- Seats remaining info -->
+                    <TextBlock Text="{Binding SeatsInfo}"
+                               Foreground="#00FFFF" FontSize="12"
+                               FontWeight="Bold" Margin="0,0,0,14"
+                               TextWrapping="Wrap"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button Content="Confirm" Width="80" Margin="0,0,6,0" Padding="0,6"
